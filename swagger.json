@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Github users API",
+        "description": "Service to obtain github users"
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "localhost:3000",
+    "basePath": "/v1",
+    "tags": [
+        {
+            "name": "users",
+            "description": "Service to obtain github users"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Gets github users for a specified programming language and username",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "specify the username that need to be considered to filter users",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "specify the language that need to be considered to filter, multiple languages can be provided separated by ,",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name" : "per_page",
+                        "in": "query",
+                        "description":"Specify the number that need to be considered for per page if no value is specified a default value of 20 is considered, if specified more than 60 the a max of 60 is considered",
+                        "required":false,
+                        "type":"number"
+                    },
+                    {
+                        "name" : "page",
+                        "in": "query",
+                        "description":"Specify the page number that need to be considered, if no value is specified a default value of 1 is considered",
+                        "required":false,
+                        "type":"number"
+                    }
+                ],
+                "description": "Returns a list of users.",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "number"
+                                },
+                                "total_count": {
+                                    "type": "number"
+                                },
+                                "incomplete_results": {
+                                    "type": "boolean"
+                                },
+                                "users": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {"type": "string"},
+                                            "login":{"type":"string"},
+                                            "id":{ "type": "number"},
+                                            "node_id":{"type":"string"},
+                                            "avatar_url":{"type":"string"},
+                                            "gravatar_id": {"type":"string"},
+                                            "url": {"type":"string"},
+                                            "html_url": {"type":"string"},
+                                            "followers_url": {"type":"string"},
+                                            "following_url": {"type":"string"},
+                                            "gists_url": {"type":"string"},
+                                            "starred_url": {"type":"string"},
+                                            "subscriptions_url": {"type":"string"},
+                                            "organizations_url": {"type":"string"},
+                                            "repos_url": {"type":"string"},
+                                            "events_url": {"type":"string"},
+                                            "received_events_url": {"type":"string"},
+                                            "type": {"type":"string"},
+                                            "site_admin": {"type":"boolean"},
+                                            "company": {"type":"string"},
+                                            "blog": {"type":"string"},
+                                            "location": {"type":"string"},
+                                            "email": {"type":"string"},
+                                            "hireable": {"type":"string"},
+                                            "bio": {"type":"string"},
+                                            "public_repos": {"type":"number"},
+                                            "publis_gists":{"type":"number"},
+                                            "followers": {"type":"number"},
+                                            "following": {"type":"number"},
+                                            "created_at": {"type":"string"},
+                                            "updated_at": {"type":"string"}
+                                        }
+                                    }
+                                },
+                                "error":{
+                                    "type":"array",
+                                    "items":{}
+                                }
+                            }
+                        }
+                    },
+                    "403":{
+                        "description": "List of errors",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "number"
+                                },
+                                "total_count": {
+                                    "type": "number"
+                                },
+                                "incomplete_results": {
+                                    "type": "boolean"
+                                },
+                                "users": {
+                                    "type": "array",
+                                    "items": {}
+                                },
+                                "error":{
+                                    "type":"array",
+                                    "items":{
+                                        "type":"object",
+                                        "properties":{
+                                            "message":{"type":"string"},
+                                            "requestCount":{"type":"number"},
+                                            "status":{"type":"number"},
+                                            "documentation_url":{"type":"string"}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
