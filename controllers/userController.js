@@ -1,6 +1,28 @@
 const userService = require('../services/userService');
 const config = require('../config');
 
+/**
+ * Method to obtain users for the specified username and language along with per_page and page 
+ * number. This function initally fetches the search reults for the specified filter, which contains the 
+ * user metadata. Then ton using the meta data it fetches the data for each user. On successful fetch of both 
+ * search and users status 200 is returned.
+ * 
+ * If search results for a psecified language are empty the loop continues and fetches the results for next language
+ * On timeout for obtaning search results for specified language, it then tries to fetch for next language
+ * 
+ * If no users are available for all requested languages then empty is returned with status 200
+ * 
+ * If the users info fetch partially fails, the method returns with a failure status code as of the user info request
+ * along with the number of requests failed with same status code, its an array if a request is failed in multiple ways 
+ * then all the erros are returned along with partial success responses. key "incomplete_results": true specifies
+ * that the request has entirely or partially failed responses.
+ * 
+ * status code:504 is for request timeout
+ * status code:200 is for success
+ * 
+ * @param {object} req 
+ * @param {object} res 
+ */
 const getUsers = async (req, res) => {
     if (req.query.username === undefined || req.query.language === undefined) {
         res.status(404).send({ message: "username or language not specified" , status:400});

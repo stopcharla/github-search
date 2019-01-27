@@ -2,6 +2,15 @@ const config = require('../config');
 const requestService = require('./requestService');
 const Cache = require('../cache/cache');
 
+/**
+ * Fetches all valid users for the specifed filters provided in the arguments
+ * Initally the method gets all the filters appended to the baseurl followed by 
+ * requesting a http get call to obtain the users meta data for the search query
+ * @param {string} username 
+ * @param {string} language 
+ * @param {number} count 
+ * @param {number} pageIndex 
+ */
 const getValidUsers = async (username, language, count, pageIndex) => {
     const queryParams = {
         q: `${username}+language:${language}`,
@@ -14,6 +23,15 @@ const getValidUsers = async (username, language, count, pageIndex) => {
     return response;
 }
 
+/**
+ * To fetch the users info provided in the argument, for each user the method cheks if 
+ * data is available in the cache if yes then the data is fetched and stored to a partial array 
+ * else then the data is fetched from the http api.
+ * 
+ * All the responses received from http api are then saved to the cache by checking their valid status codes
+ * if a error is occured in the responses. Those error objects are als well retuned.
+ * @param {Array} users 
+ */
 const getUsersInfo = async (users) => {
     const userPromises = [];
     const cachedUsers = [];
@@ -43,6 +61,10 @@ const getUsersInfo = async (users) => {
     return { status: 200, users: cachedUsers, incomplete_results: false, error: [] };
 }
 
+/**
+ * on click of Ctrl+C the event is captured and the cache is cleaned up
+ * then the process is exited
+ */
 process.on('SIGINT', function () {
     console.log("signal recived clean up need to be done");
     const cache = new Cache();
@@ -51,6 +73,9 @@ process.on('SIGINT', function () {
     process.exit();
 });
 
+/**
+ * On exit as well we try to flush all the cache entries
+ */
 process.on('exit', function () {
     console.log('exit message received');
     const cache = new Cache();
